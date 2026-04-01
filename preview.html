@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopee Profit Finder — UI プレビュー</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --surface: #ffffff;
+      --border: #e2e5ea;
+      --text: #1a1d23;
+      --text-muted: #6b7280;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --green: #059669;
+      --green-bg: #ecfdf5;
+      --red: #dc2626;
+      --red-bg: #fef2f2;
+      --yellow: #d97706;
+      --yellow-bg: #fffbeb;
+      --radius: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 2rem 1.5rem 1.5rem; text-align: center; }
+    header h1 { font-size: 1.75rem; font-weight: 700; }
+    .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-top: 0.25rem; }
+    main { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+    .search-section { margin-bottom: 1.5rem; }
+    .search-bar { display: flex; gap: 0.5rem; }
+    .search-bar input { flex: 1; padding: 0.75rem 1rem; font-size: 1rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); outline: none; transition: border-color 0.15s; }
+    .search-bar input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+    .search-bar button { padding: 0.75rem 1.75rem; font-size: 1rem; font-weight: 600; color: #fff; background: var(--primary); border: none; border-radius: var(--radius); cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+    .search-bar button:hover { background: var(--primary-hover); }
+    .spinner, .spinner-large { display: inline-block; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .spinner { width: 18px; height: 18px; }
+    .spinner-large { width: 40px; height: 40px; border-width: 4px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem; text-align: center; box-shadow: var(--shadow); }
+    .loading-card h3 { margin-top: 1rem; font-size: 1.15rem; }
+    .loading-detail { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem; }
+    .pipeline-stages { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; margin-top: 1.25rem; }
+    .stage { padding: 0.3rem 0.6rem; font-size: 0.75rem; background: #f1f3f5; border-radius: 4px; color: var(--text-muted); }
+    .stage.active { background: var(--primary); color: #fff; }
+    .results-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-top: 1rem; }
+    .results-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); }
+    .results-header h2 { font-size: 1.15rem; font-weight: 600; }
+    .results-stats { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
+    .stat { font-size: 0.85rem; color: var(--text-muted); }
+    .stat strong { color: var(--text); }
+    .table-wrap { overflow-x: auto; }
+    .results-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .results-table th { background: #f8f9fb; font-weight: 600; text-align: left; padding: 0.65rem 0.75rem; border-bottom: 2px solid var(--border); white-space: nowrap; }
+    .results-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .results-table tbody tr:hover { background: #f8fafd; }
+    .product-name { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+    .price, .profit { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .profit { font-weight: 600; }
+    .profit.positive { color: var(--green); }
+    .profit.negative { color: var(--red); }
+    .roi { text-align: right; font-weight: 700; white-space: nowrap; padding: 0.2rem 0.5rem; border-radius: 4px; }
+    .roi.high { background: var(--green-bg); color: var(--green); }
+    .roi.medium { background: var(--yellow-bg); color: var(--yellow); }
+    .roi.low { color: var(--text-muted); }
+    .link-btn { display: inline-block; padding: 0.25rem 0.6rem; font-size: 0.78rem; font-weight: 600; color: var(--primary); background: rgba(37,99,235,0.08); border-radius: 4px; text-decoration: none; }
+    .notice { background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.88rem; color: #92400e; }
+    .notice strong { display: block; margin-bottom: 0.25rem; font-size: 0.95rem; }
+    .notice code { background: rgba(0,0,0,0.07); padding: 0.1rem 0.35rem; border-radius: 3px; font-family: monospace; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.82rem; }
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .tab { padding: 0.45rem 1rem; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface); cursor: pointer; font-size: 0.88rem; font-weight: 500; }
+    .tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .view { display: none; }
+    .view.active { display: block; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Shopee Profit Finder</h1>
+  <p class="subtitle">Search for profitable arbitrage opportunities between Shopee and Japanese suppliers</p>
+</header>
+
+<main>
+  <div class="notice">
+    <strong>⚠️ これは UI プレビューです（デモデータ表示）</strong>
+    実際のパイプラインを動かすには、ターミナルで
+    <code>bash start.sh</code> を実行してから
+    <code>http://localhost:8000</code> を開いてください。
+  </div>
+
+  <!-- タブ切り替え -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('search')">① 検索画面</button>
+    <button class="tab" onclick="showTab('loading')">② 実行中</button>
+    <button class="tab" onclick="showTab('results')">③ 結果画面</button>
+  </div>
+
+  <!-- 検索画面 -->
+  <div id="tab-search" class="view active">
+    <div class="search-section">
+      <div class="search-bar">
+        <input type="text" placeholder="キーワードを入力 (例: たまごっち, ポケモンカード, アニメフィギュア)" value="たまごっち">
+        <button>Search</button>
+      </div>
+    </div>
+    <div class="results-card" style="margin-top:1rem;">
+      <div class="results-header"><h2>直近の検索履歴</h2></div>
+      <div class="table-wrap">
+        <table class="results-table">
+          <thead><tr><th>キーワード</th><th>商品数</th><th>マッチ</th><th>利益あり</th><th>時間</th></tr></thead>
+          <tbody>
+            <tr><td><strong>ポケモンカード</strong></td><td>48</td><td>12</td><td>5</td><td>18.3s</td></tr>
+            <tr><td><strong>たまごっち</strong></td><td>32</td><td>8</td><td>3</td><td>14.7s</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ローディング画面 -->
+  <div id="tab-loading" class="view">
+    <div class="loading-card">
+      <div class="spinner-large"></div>
+      <h3>Researching "たまごっち"...</h3>
+      <p class="loading-detail">Pipeline is running through all 7 stages.<br>Elapsed: 8.4s</p>
+      <div class="pipeline-stages">
+        <span class="stage active">1. Shopee Scrape</span>
+        <span class="stage active">2. Product Keys</span>
+        <span class="stage active">3. Opportunity AI</span>
+        <span class="stage active">4. Supplier Search</span>
+        <span class="stage">5. Matching AI</span>
+        <span class="stage">6. Competition</span>
+        <span class="stage">7. Profit Calc</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 結果画面 -->
+  <div id="tab-results" class="view">
+    <div class="results-card">
+      <div class="results-header">
+        <h2>Results — "たまごっち"</h2>
+        <div class="results-stats">
+          <span class="stat">Scraped: <strong>32</strong></span>
+          <span class="stat">Sources: <strong>8</strong></span>
+          <span class="stat">Matches: <strong>8</strong></span>
+          <span class="stat">Profitable: <strong>3</strong></span>
+          <span class="stat">Time: <strong>14.7s</strong></span>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Product</th>
+              <th>Shopee Price</th>
+              <th>Supplier Price</th>
+              <th>Profit (¥)</th>
+              <th>ROI</th>
+              <th>Supplier</th>
+              <th>Competition</th>
+              <th>Link</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-num">1</td>
+              <td class="product-name">Tamagotchi Uni ホワイト 限定版</td>
+              <td class="price">TWD 1,280</td>
+              <td class="price">¥3,200</td>
+              <td class="profit positive">+¥1,840</td>
+              <td><span class="roi high">57.5%</span></td>
+              <td class="source">Yahoo JP</td>
+              <td class="price">TWD 1,450</td>
+              <td><a class="link-btn" href="#">View</a></td>
+            </tr>
+            <tr>
+              <td class="row-num">2</td>
+              <td class="product-name">Tamagotchi Smart ピンク</td>
+              <td class="price">TWD 890</td>
+              <td class="price">¥2,100</td>
+              <td class="profit positive">+¥780</td>
+              <td><span class="roi medium">37.1%</span></td>
+              <td class="source">Mercari</td>
+              <td class="price">TWD 950</td>
+              <td><a class="link-btn" href="#">View</a></td>
+            </tr>
+            <tr>
+              <td class="row-num">3</td>
+              <td class="product-name">Tamagotchi Original 復刻版 ブルー</td>
+              <td class="price">TWD 480</td>
+              <td class="price">¥980</td>
+              <td class="profit positive">+¥380</td>
+              <td><span class="roi medium">38.8%</span></td>
+              <td class="source">Rakuten</td>
+              <td class="price">TWD 520</td>
+              <td><a class="link-btn" href="#">View</a></td>
+            </tr>
+            <tr>
+              <td class="row-num">4</td>
+              <td class="product-name">Tamagotchi Connection V3</td>
+              <td class="price">TWD 350</td>
+              <td class="price">¥1,200</td>
+              <td class="profit negative">-¥220</td>
+              <td><span class="roi low">-18.3%</span></td>
+              <td class="source">Amazon JP</td>
+              <td class="price">—</td>
+              <td><a class="link-btn" href="#">View</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>Shopee Profit Finder v1.0 — Pipeline: 7 stages | DB: SQLite WAL | AI: OpportunityScore + ProductMatching</p>
+</footer>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
