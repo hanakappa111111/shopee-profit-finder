@@ -1,0 +1,9 @@
+<!-- HTMX partial: error state -->
+<div class="error-card">
+  <h3>Pipeline Error</h3>
+  {% if keyword %}
+  <p>Research for "{{ keyword }}" encountered an error:</p>
+  {% endif %}
+  <pre class="error-detail">{{ error }}</pre>
+  <p class="hint">Check server logs for details. The pipeline may need external services (Shopee, supplier APIs) to be accessible.</p>
+</div>
