@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopee Profit Finder</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+</head>
+<body>
+
+<header>
+  <h1>Shopee Profit Finder</h1>
+  <p class="subtitle">Search for profitable arbitrage opportunities between Shopee and Japanese suppliers</p>
+</header>
+
+<main>
+  <!-- Search Form -->
+  <section class="search-section">
+    <form hx-post="/research"
+          hx-target="#results-container"
+          hx-swap="innerHTML"
+          hx-indicator="#search-indicator">
+      <div class="search-bar">
+        <input type="text"
+               name="keyword"
+               placeholder="Enter keyword (e.g. tamagotchi, pokemon cards, anime figure)"
+               required
+               autocomplete="off"
+               autofocus>
+        <button type="submit">Search</button>
+      </div>
+    </form>
+    <div id="search-indicator" class="htmx-indicator">
+      <span class="spinner"></span> Starting pipeline...
+    </div>
+  </section>
+
+  <!-- Results Container (HTMX swap target) -->
+  <section id="results-container">
+    {% if jobs %}
+    <div class="history">
+      <h2>Recent Searches</h2>
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Keyword</th>
+            <th>Products</th>
+            <th>Matches</th>
+            <th>Profitable</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for job in jobs %}
+          {% if job.report %}
+          <tr>
+            <td><strong>{{ job.keyword }}</strong></td>
+            <td>{{ job.report.products_scraped }}</td>
+            <td>{{ job.report.matches_found }}</td>
+            <td>{{ job.report.profitable_count }}</td>
+            <td>{{ "%.1f"|format(job.elapsed) }}s</td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+  </section>
+</main>
+
+<footer>
+  <p>Shopee Profit Finder v1.0 &mdash; Pipeline: 7 stages | DB: SQLite WAL</p>
+</footer>
+
+</body>
+</html>
