@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: shopee-profit-finder
+    runtime: docker
+    plan: free
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: SHOPEE_API_KEY
+        sync: false
