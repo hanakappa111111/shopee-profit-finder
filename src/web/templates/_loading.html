@@ -1,0 +1,23 @@
+<!-- HTMX partial: loading state with auto-poll -->
+<div class="loading-card"
+     hx-get="/research/{{ job.job_id }}/status"
+     hx-trigger="every 2s"
+     hx-swap="outerHTML">
+  <div class="spinner-large"></div>
+  <h3>Researching "{{ job.keyword }}"...</h3>
+  <p class="loading-detail">
+    Pipeline is running through all 7 stages.
+    {% if elapsed is defined %}
+      <br>Elapsed: {{ elapsed }}s
+    {% endif %}
+  </p>
+  <div class="pipeline-stages">
+    <span class="stage active">1. Shopee Scrape</span>
+    <span class="stage">2. Product Keys</span>
+    <span class="stage">3. Opportunity AI</span>
+    <span class="stage">4. Supplier Search</span>
+    <span class="stage">5. Matching</span>
+    <span class="stage">6. Competition</span>
+    <span class="stage">7. Profit Calc</span>
+  </div>
+</div>
