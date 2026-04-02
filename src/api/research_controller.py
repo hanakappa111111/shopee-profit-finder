@@ -51,9 +51,13 @@ _MAX_JOBS = 50
 def _run_pipeline_safe(keyword: str, job: PipelineJob) -> None:
     """Execute the pipeline in a worker thread.  Never raises."""
     try:
-        from src.research_pipeline.pipeline import run_research_pipeline
-
-        report = run_research_pipeline(keyword)
+        import os
+        if os.environ.get("DEMO_MODE", "").lower() == "true":
+            from src.research_pipeline.demo import run_demo_pipeline
+            report = run_demo_pipeline(keyword)
+        else:
+            from src.research_pipeline.pipeline import run_research_pipeline
+            report = run_research_pipeline(keyword)
         job.report = report
         job.status = "completed"
     except Exception as exc:
