@@ -1,14 +1,14 @@
 <!-- HTMX partial: pipeline results -->
 <div class="results-card">
   <div class="results-header">
-    <h2>Results for "{{ keyword }}"</h2>
+    <h2>検索キーワード： "{{ keyword }}"</h2>
     <div class="results-stats">
       {% if report %}
       <span class="stat">Scraped: <strong>{{ report.products_scraped }}</strong></span>
       <span class="stat">Sources: <strong>{{ report.japan_sources_found }}</strong></span>
       <span class="stat">Matches: <strong>{{ report.matches_found }}</strong></span>
       <span class="stat">Profitable: <strong>{{ report.profitable_count }}</strong></span>
-      <span class="stat">Time: <strong>{{ elapsed }}s</strong></span>
+      <span class="stat">Time: <strong>{{ 経過 }}s</strong></span>
       {% endif %}
     </div>
   </div>
@@ -20,9 +20,9 @@
         <tr>
           <th>#</th>
           <th>Product</th>
-          <th>Shopee Price</th>
+          <th>Shopee推奨価格</th>
           <th>Supplier Price</th>
-          <th>Profit</th>
+          <th>推定利益</th>
           <th>ROI</th>
           <th>Supplier</th>
           <th>Competition</th>
@@ -52,7 +52,7 @@
           </td>
           <td>
             {% if r.supplier_url %}
-            <a href="{{ r.supplier_url }}" target="_blank" rel="noopener" class="link-btn">View</a>
+            <a href="{{ r.supplier_url }}" target="_blank" rel="noopener" class="link-btn">見る</a>
             {% endif %}
           </td>
         </tr>
