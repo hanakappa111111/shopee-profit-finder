@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shopee Profit Finder</title>
+  <title>Shopee 利益ファインダー</title>
   <link rel="stylesheet" href="/static/style.css">
   <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
 <body>
 
 <header>
-  <h1>Shopee Profit Finder</h1>
-  <p class="subtitle">Search for profitable arbitrage opportunities between Shopee and Japanese suppliers</p>
+  <h1>Shopee 利益ファインダー</h1>
+  <p class="subtitle">ShopeeとJapanese仕入れ先の間で利益商品を発見する</p>
 </header>
 
 <main>
@@ -24,15 +24,15 @@
       <div class="search-bar">
         <input type="text"
                name="keyword"
-               placeholder="Enter keyword (e.g. tamagotchi, pokemon cards, anime figure)"
+               placeholder="キーワードを入力（例：たまごっち、ポケモンカード、アニメフィギュア）"
                required
                autocomplete="off"
                autofocus>
-        <button type="submit">Search</button>
+        <button type="submit">検索</button>
       </div>
     </form>
     <div id="search-indicator" class="htmx-indicator">
-      <span class="spinner"></span> Starting pipeline...
+      <span class="spinner"></span> パイプライン起動中...
     </div>
   </section>
 
@@ -40,15 +40,15 @@
   <section id="results-container">
     {% if jobs %}
     <div class="history">
-      <h2>Recent Searches</h2>
+      <h2>最近の検索履歴</h2>
       <table class="history-table">
         <thead>
           <tr>
-            <th>Keyword</th>
-            <th>Products</th>
-            <th>Matches</th>
-            <th>Profitable</th>
-            <th>Time</th>
+            <th>キーワード</th>
+            <th>取得商品数</th>
+            <th>マッチ数</th>
+            <th>利益商品数</th>
+            <th>所要時間</th>
           </tr>
         </thead>
         <tbody>
@@ -59,7 +59,7 @@
             <td>{{ job.report.products_scraped }}</td>
             <td>{{ job.report.matches_found }}</td>
             <td>{{ job.report.profitable_count }}</td>
-            <td>{{ "%.1f"|format(job.elapsed) }}s</td>
+            <td>{{ "%.1f"|format(job.経過) }}s</td>
           </tr>
           {% endif %}
           {% endfor %}
@@ -71,7 +71,7 @@
 </main>
 
 <footer>
-  <p>Shopee Profit Finder v1.0 &mdash; Pipeline: 7 stages | DB: SQLite WAL</p>
+  <p>Shopee 利益ファインダー v1.0 &mdash; パイプライン： 7ステージ | DB: SQLite WAL</p>
 </footer>
 
 </body>
